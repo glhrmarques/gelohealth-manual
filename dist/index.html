@@ -21,57 +21,158 @@
     </script>
     <style>
       body { margin: 0; font-family: 'Google Sans Flex', Arial, sans-serif; }
-      #sidebar { margin: 0 0 0 auto; max-height: none; max-width: 100%; }
-      #sidebar::backdrop { background: transparent; }
-      button:focus-visible { outline: 2px solid #999; outline-offset: 4px; }
+
+      :root {
+        --trigger-inset: 24px;
+        --trigger-width: 169px;
+        --trigger-height: 56px;
+        --panel-width: min(450px, 100vw);
+        --panel-padding: 32px;
+      }
+
+      /* A foto cobre o painel e recua exatamente a largura dele. */
+      #hero-layer {
+        --menu-progress: 0;
+        transform: translateX(calc(-1 * var(--panel-width) * var(--menu-progress)));
+      }
+
+      #site-navigation { scrollbar-width: thin; scrollbar-color: #555 transparent; }
     </style>
   </head>
   <body class="bg-white font-sans">
-    <main class="relative flex min-h-screen min-h-[100svh] items-start justify-end overflow-hidden p-6" aria-label="Banho de gelo">
-      <img
-        src="assets/ice-bath.png"
-        alt="Pessoa relaxando em uma banheira de gelo cercada por vegetação."
-        class="pointer-events-none absolute inset-0 h-full w-full object-cover object-center"
-        fetchpriority="high"
-      />
-      <button id="open-sidebar" type="button" aria-haspopup="dialog" aria-controls="sidebar" aria-expanded="false" class="relative flex h-14 shrink-0 items-center justify-center gap-2.5 bg-white px-3 py-2.5 text-black">
-        <span class="whitespace-nowrap text-base font-bold leading-normal">Banho de gelo</span>
-        <span class="material-symbols-outlined shrink-0" aria-hidden="true">add</span>
+    <div id="hero-layer" class="relative z-20">
+      <main id="overview" class="relative min-h-screen min-h-[100dvh] overflow-hidden bg-[#0c0907]" aria-label="Banho de gelo">
+        <img
+          src="assets/ice-bath.png"
+          alt="Pessoa relaxando em uma banheira de gelo cercada por vegetação."
+          class="pointer-events-none absolute inset-0 h-full w-full object-cover object-center"
+          fetchpriority="high"
+        />
+      </main>
+      <div id="menu-overlay" aria-hidden="true" class="pointer-events-none absolute inset-0 bg-black/40 opacity-0"></div>
+    </div>
+
+    <header>
+      <button id="menu-toggle" type="button" aria-label="Abrir menu de banho de gelo" aria-controls="site-navigation" aria-expanded="false" class="fixed right-[var(--trigger-inset)] top-[var(--trigger-inset)] z-30 h-[var(--trigger-height)] w-[var(--trigger-width)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#F25C2A]">
+        <span id="menu-label" aria-hidden="true" class="pointer-events-none absolute inset-y-0 right-0 flex w-[var(--trigger-width)] items-center justify-center gap-2.5 whitespace-nowrap bg-white px-3 text-base font-bold leading-normal text-black">
+          Banho de gelo <span class="material-symbols-outlined shrink-0">add</span>
+        </span>
+        <span id="menu-close" aria-hidden="true" class="pointer-events-none absolute right-0 top-0 flex size-[var(--trigger-height)] items-center justify-center bg-white text-black opacity-0">
+          <span class="material-symbols-outlined">close</span>
+        </span>
       </button>
-    </main>
-    <dialog id="sidebar" aria-labelledby="sidebar-title" class="fixed inset-y-0 right-0 h-[100dvh] w-[332px] border border-[#393532] bg-[#0c0907] px-[22px] pb-6 pt-[17px] text-white">
-      <div class="flex justify-end">
-        <button id="close-sidebar" type="button" aria-label="Fechar menu" autofocus class="flex h-[42px] w-[42px] items-center justify-center bg-white text-black">
-          <span class="material-symbols-outlined" aria-hidden="true">close</span>
-        </button>
+
+      <div class="fixed inset-y-0 right-0 z-10 w-[var(--panel-width)] bg-[#0c0907] text-white">
+        <nav id="site-navigation" aria-label="Menu principal" hidden inert class="absolute inset-x-0 bottom-0 top-[calc(var(--panel-padding)+var(--trigger-height))] overflow-y-auto overscroll-contain px-[var(--panel-padding)] pb-8 pt-10">
+          <a href="#overview" aria-current="page" class="block w-fit text-base leading-[18px] transition-colors duration-200 hover:text-[#F25C2A] focus-visible:outline-none focus-visible:underline motion-reduce:transition-none">Banho de gelo</a>
+          <div class="mt-12 space-y-12">
+            <h2 class="flex min-h-16 items-center text-[32px] font-medium leading-8 tracking-[-0.5px]">O que você vai sentir</h2>
+            <h2 class="flex min-h-16 items-center text-[32px] font-medium leading-8 tracking-[-0.5px]">Primeiras semanas</h2>
+          </div>
+          <ul aria-label="Redes sociais" class="mt-[42px] space-y-9 border-t border-[#302d2b] pt-11 text-base leading-5">
+            <li>TikTok</li>
+            <li>Instagram</li>
+            <li>Youtube</li>
+          </ul>
+        </nav>
       </div>
-      <h1 id="sidebar-title" class="mt-[27px] text-xs font-normal leading-[18px]">Banho de gelo</h1>
-      <!-- Navigation destinations will be added when the sections and social profiles are supplied. -->
-      <div class="mt-[42px] space-y-[51px]">
-        <h2 class="text-2xl font-medium leading-8 tracking-[-0.5px]">O que você vai sentir</h2>
-        <h2 class="text-2xl font-medium leading-8 tracking-[-0.5px]">Primeiras semanas</h2>
-      </div>
-      <hr class="mb-[31px] mt-[37px] border-0 border-t border-[#302d2b]" />
-      <ul class="space-y-[23px] text-xs font-normal leading-[18px]" aria-label="Redes sociais">
-        <li>TikTok</li>
-        <li>Instagram</li>
-        <li>Youtube</li>
-      </ul>
-    </dialog>
+    </header>
+
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/gsap.min.js"></script>
     <script>
-      const sidebar = document.getElementById('sidebar');
-      const openButton = document.getElementById('open-sidebar');
-      openButton.addEventListener('click', () => {
-        sidebar.showModal();
-        openButton.setAttribute('aria-expanded', 'true');
+      const toggle = document.querySelector('#menu-toggle');
+      const navigation = document.querySelector('#site-navigation');
+      const overlay = document.querySelector('#menu-overlay');
+      const page = document.querySelector('#overview');
+      const heroLayer = document.querySelector('#hero-layer');
+      const firstLink = navigation.querySelector('a');
+      const label = document.querySelector('#menu-label');
+      const closeIcon = document.querySelector('#menu-close');
+      const motion = gsap.matchMedia();
+      let timeline;
+      let isOpen = false;
+
+      // 1. Definir o ritmo e os valores do estado fechado.
+      motion.add({ normal: '(prefers-reduced-motion: no-preference)', reduced: '(prefers-reduced-motion: reduce)' }, ({ conditions }) => {
+        const reduced = conditions.reduced;
+        const timing = {
+          slide: reduced ? 0.01 : 0.7,
+          overlay: reduced ? 0.01 : 0.3,
+          swap: reduced ? 0.01 : 0.16,
+          closeIconAt: reduced ? 0 : 0.08,
+        };
+        gsap.set(closeIcon, { opacity: 0, rotation: reduced ? 0 : -45 });
+
+        // 2. Montar uma timeline que também controla o fechamento.
+        timeline = gsap.timeline({
+          paused: true,
+          onComplete() {
+            navigation.inert = false;
+            firstLink.focus({ preventScroll: true });
+          },
+          onReverseComplete: finishClose,
+        });
+        // O painel fica parado. A foto e o overlay deslizam juntos à frente dele.
+        const rootStyles = getComputedStyle(document.documentElement);
+        const padding = rootStyles.getPropertyValue('--panel-padding').trim();
+        const closeSize = rootStyles.getPropertyValue('--trigger-height').trim();
+        timeline
+          .to(heroLayer, { '--menu-progress': 1, duration: timing.slide, ease: reduced ? 'none' : 'power3.inOut' }, 0)
+          .to(overlay, { opacity: 1, duration: timing.overlay, ease: 'power1.out' }, 0)
+          .to(label, { opacity: 0, duration: timing.swap }, 0)
+          .to(toggle, { top: padding, right: padding, width: closeSize, duration: timing.swap }, timing.closeIconAt)
+          .to(closeIcon, { opacity: 1, rotation: 0, duration: timing.swap }, timing.closeIconAt);
+
+        // Preservar o estado se a preferência de movimento mudar com o menu aberto.
+        if (isOpen) {
+          timeline.progress(1).pause();
+        } else {
+          finishClose();
+        }
       });
-      document.getElementById('close-sidebar').addEventListener('click', () => sidebar.close());
-      sidebar.addEventListener('click', (event) => {
-        if (event.target === sidebar && event.clientX < sidebar.getBoundingClientRect().left) sidebar.close();
+
+      // 3. Abrir, bloquear o fundo e manter o botão disponível para inverter a animação.
+      function openMenu() {
+        isOpen = true;
+        toggle.setAttribute('aria-expanded', 'true');
+        toggle.setAttribute('aria-label', 'Fechar menu');
+        navigation.hidden = false;
+        page.inert = true;
+        overlay.classList.remove('pointer-events-none');
+        document.body.classList.add('overflow-hidden');
+        timeline.play();
+      }
+
+      // 4. Fechar a partir do ponto atual e liberar o fundo ao final.
+      function closeMenu() {
+        if (!isOpen) return;
+        isOpen = false;
+        toggle.setAttribute('aria-expanded', 'false');
+        toggle.setAttribute('aria-label', 'Abrir menu de banho de gelo');
+        toggle.focus({ preventScroll: true });
+        navigation.inert = true;
+        timeline.reverse();
+        if (timeline.time() === 0) finishClose();
+      }
+
+      function finishClose() {
+        navigation.hidden = true;
+        page.inert = false;
+        overlay.classList.add('pointer-events-none');
+        document.body.classList.remove('overflow-hidden');
+      }
+
+      // 5. Conectar os controles de mouse e teclado.
+      toggle.addEventListener('click', () => isOpen ? closeMenu() : openMenu());
+      overlay.addEventListener('click', closeMenu);
+      navigation.addEventListener('click', (event) => {
+        if (event.target.closest('a')) closeMenu();
       });
-      sidebar.addEventListener('close', () => {
-        openButton.setAttribute('aria-expanded', 'false');
-        openButton.focus();
+      document.addEventListener('keydown', (event) => {
+        if (event.key === 'Escape' && isOpen) {
+          event.preventDefault();
+          closeMenu();
+        }
       });
     </script>
   </body>
